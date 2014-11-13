@@ -521,7 +521,6 @@
         NSMutableParagraphStyle *style  = [[NSMutableParagraphStyle alloc] init];
         style.alignment = NSTextAlignmentCenter;
         style.lineBreakMode = (self.showsCount) ? NSLineBreakByWordWrapping : NSLineBreakByTruncatingTail;
-        style.lineBreakMode = NSLineBreakByWordWrapping;
         style.minimumLineHeight = 20.0f;
         
         [attributedString addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, string.length)];
