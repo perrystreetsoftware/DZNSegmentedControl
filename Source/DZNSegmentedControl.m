@@ -11,6 +11,8 @@
 #import "DZNSegmentedControl.h"
 #import "DZNBadge.h"
 
+static const CGFloat kBadgeMargin = 3.f;
+
 @interface DZNSegmentedControl ()
 @property (nonatomic) BOOL initializing;
 @property (nonatomic, strong) UIView *selectionIndicator;
@@ -259,8 +261,8 @@
             
             UIButton *button = [self buttonAtIndex:i];
             [self.badge sizeToFit];
-            CGFloat xOffset = button.frame.origin.x + button.frame.size.width - self.badge.frame.size.width;
-            CGFloat yOffset = (button.frame.size.height - self.badge.frame.size.height) / 2.0;
+            CGFloat xOffset = button.frame.origin.x + button.frame.size.width - self.badge.frame.size.width - kBadgeMargin;
+            CGFloat yOffset = ((button.frame.size.height - self.badge.frame.size.height) / 2.0) - (2 * kBadgeMargin);
             return CGRectMake(xOffset, yOffset, self.badge.frame.size.width, self.badge.frame.size.height);
         }
     }
