@@ -377,7 +377,28 @@
     [self setSelected:YES forSegmentAtIndex:segment];
 }
 
-- (void)setTitle:(NSString *)title forSegmentAtIndex:(NSUInteger)segment
+- (void)animatedButtonReveal:(NSInteger)segment {
+    UIButton *newButton = [self buttons][segment];
+    newButton.alpha = 0;
+    newButton.transform = CGAffineTransformMakeScale(0.1, 0.1);
+
+    CGFloat damping = 0.45f;
+    CGFloat velocity = 0.5f;
+
+    [UIView animateWithDuration:0.5
+                          delay:0.0f
+         usingSpringWithDamping:damping
+          initialSpringVelocity:velocity
+                        options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         newButton.alpha = 1;
+                         newButton.transform = CGAffineTransformMakeScale(1.0, 1.0);
+                     }
+                     completion:^(BOOL finished) {
+                     }];
+}
+
+- (void)setTitle:(NSString *)title forSegmentAtIndex:(NSUInteger)segment animated:(BOOL)animated
 {
     if (!title) {
         return;
@@ -393,8 +414,20 @@
         [self addButtonForSegment:segment];
     }
     else {
-        [items replaceObjectAtIndex:segment withObject:title];
-        [self setCount:[self countForSegmentAtIndex:segment] forSegmentAtIndex:segment];
+        if (animated) {
+            UIButton *targetButton = [self buttons][segment];
+            [UIView animateWithDuration:0.35 animations:^{
+                targetButton.transform = CGAffineTransformMakeScale(0.1, 0.1);
+                targetButton.alpha = 0;
+            } completion:^(BOOL finished) {
+                [items replaceObjectAtIndex:segment withObject:title];
+                [self setCount:[self countForSegmentAtIndex:segment] forSegmentAtIndex:segment];
+                [self animatedButtonReveal:segment];
+            }];
+        } else {
+            [items replaceObjectAtIndex:segment withObject:title];
+            [self setCount:[self countForSegmentAtIndex:segment] forSegmentAtIndex:segment];
+        }
     }
     
     _items = items;
