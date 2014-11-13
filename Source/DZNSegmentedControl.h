@@ -41,6 +41,8 @@
 @property (nonatomic, strong) NSNumberFormatter *numberFormatter;
 /** YES to display the count number on top of the titles. Default is YES. */
 @property (nonatomic) BOOL showsCount;
+/** YES to display a single red badge. */
+@property (nonatomic) BOOL showsBadge;
 /** YES to adjust the width of the selection indicator on the title width. Default is YES. */
 @property (nonatomic) BOOL autoAdjustSelectionIndicatorWidth;
 /** YES if the title should display on top of the count. Default is NO. */

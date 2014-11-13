@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		075533A11A153F31008E0F86 /* DZNBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 075533A01A153F31008E0F86 /* DZNBadge.m */; };
 		4FAD79331934546A009808D5 /* DZNSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAD79321934546A009808D5 /* DZNSegmentedControl.m */; };
 		4FFE32C718C56B5100C3A85F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FFE32C618C56B5100C3A85F /* Foundation.framework */; };
 		4FFE32C918C56B5100C3A85F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FFE32C818C56B5100C3A85F /* CoreGraphics.framework */; };
@@ -19,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0755339F1A153F31008E0F86 /* DZNBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZNBadge.h; path = ../../Source/DZNBadge.h; sourceTree = "<group>"; };
+		075533A01A153F31008E0F86 /* DZNBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZNBadge.m; path = ../../Source/DZNBadge.m; sourceTree = "<group>"; };
 		4FAD79311934546A009808D5 /* DZNSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZNSegmentedControl.h; path = ../../Source/DZNSegmentedControl.h; sourceTree = "<group>"; };
 		4FAD79321934546A009808D5 /* DZNSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZNSegmentedControl.m; path = ../../Source/DZNSegmentedControl.m; sourceTree = "<group>"; };
 		4FFE32C318C56B5100C3A85F /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,6 +59,8 @@
 			children = (
 				4FAD79311934546A009808D5 /* DZNSegmentedControl.h */,
 				4FAD79321934546A009808D5 /* DZNSegmentedControl.m */,
+				0755339F1A153F31008E0F86 /* DZNBadge.h */,
+				075533A01A153F31008E0F86 /* DZNBadge.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -180,6 +185,7 @@
 				4FFE32FA18C59A9E00C3A85F /* ViewController.m in Sources */,
 				4FAD79331934546A009808D5 /* DZNSegmentedControl.m in Sources */,
 				4FFE32D318C56B5100C3A85F /* main.m in Sources */,
+				075533A11A153F31008E0F86 /* DZNBadge.m in Sources */,
 				4FFE32D718C56B5100C3A85F /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

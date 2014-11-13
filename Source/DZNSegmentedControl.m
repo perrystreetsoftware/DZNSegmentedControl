@@ -9,6 +9,7 @@
 //
 
 #import "DZNSegmentedControl.h"
+#import "DZNBadge.h"
 
 @interface DZNSegmentedControl ()
 @property (nonatomic) BOOL initializing;
@@ -17,6 +18,8 @@
 @property (nonatomic, strong) NSMutableDictionary *colors;
 @property (nonatomic, strong) NSMutableArray *counts; // of NSNumber
 @property (nonatomic, getter = isTransitioning) BOOL transitioning;
+@property (nonatomic, strong) DZNBadge *badge;
+
 @end
 
 @implementation DZNSegmentedControl
@@ -46,6 +49,10 @@
     _colors = [NSMutableDictionary new];
     
     _counts = [NSMutableArray array];
+    
+    _badge = [DZNBadge new];
+    _badge.hidden = YES;
+    [self addSubview:_badge];
     
     _initializing = NO;
 }
@@ -128,6 +135,7 @@
     
     self.selectionIndicator.frame = [self selectionIndicatorRect];
     _hairline.frame = [self hairlineRect];
+    self.badge.frame = [self badgeRect];
     
     [self sendSubviewToBack:self.selectionIndicator];
 }
@@ -244,6 +252,22 @@
     return color;
 }
 
+- (CGRect)badgeRect {
+    for (NSInteger i = 0 ; i < self.counts.count; i++) {
+        NSNumber *count = self.counts[i];
+        if ([count integerValue] > 0) {
+            
+            UIButton *button = [self buttonAtIndex:i];
+            [self.badge sizeToFit];
+            CGFloat xOffset = button.frame.origin.x + button.frame.size.width - self.badge.frame.size.width;
+            CGFloat yOffset = (button.frame.size.height - self.badge.frame.size.height) / 2.0;
+            return CGRectMake(xOffset, yOffset, self.badge.frame.size.width, self.badge.frame.size.height);
+        }
+    }
+    
+    return CGRectZero;
+}
+
 - (CGRect)selectionIndicatorRect
 {
     CGRect frame = CGRectZero;
@@ -331,6 +355,10 @@
 
 
 #pragma mark - Setter Methods
+
+- (void)setShowsBadge:(BOOL)showsBadge {
+    _badge.hidden = !showsBadge;
+}
 
 - (void)setTintColor:(UIColor *)color
 {
@@ -443,7 +471,8 @@
     NSAssert(segment >= 0, @"Cannot assign a title to a negative segment.");
     
     self.counts[segment] = count;
-        
+    
+    self.badge.badgeCount = [count integerValue];
     [self configureSegments];
 }
 
@@ -690,6 +719,7 @@
     
     self.selectionIndicator.frame = [self selectionIndicatorRect];
     self.selectionIndicator.backgroundColor = self.tintColor;
+    self.badge.frame = [self badgeRect];
 }
 
 - (void)configureButtonForSegment:(NSUInteger)segment
