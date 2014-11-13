@@ -46,7 +46,8 @@
                                                  attributes:fontAtts
                                                     context:nil];
 
-    self.frame = CGRectMake(0, 0, rect.size.width + 5.f, rect.size.height + 5.f);
+    CGFloat maxDimension = MAX(rect.size.width, rect.size.height);
+    self.frame = CGRectMake(0, 0, maxDimension + 5.f, maxDimension + 5.f);
 }
 
 - (void)layoutSubviews {
