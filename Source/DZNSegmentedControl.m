@@ -55,6 +55,7 @@ static const CGFloat kBadgeMargin = 3.f;
     _badge = [DZNBadge new];
     _badge.hidden = YES;
     [self addSubview:_badge];
+    [self bringSubviewToFront:_badge];
     
     _initializing = NO;
 }
@@ -710,6 +711,7 @@ static const CGFloat kBadgeMargin = 3.f;
     button.tag = segment;
 
     [self addSubview:button];
+    [self bringSubviewToFront:self.badge];
 }
 
 - (void)configureSegments
