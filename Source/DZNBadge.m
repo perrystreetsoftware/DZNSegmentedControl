@@ -35,6 +35,7 @@
     } else {
         self.labelView.text = @"";
     }
+    [self setNeedsDisplay];
 }
 
 - (void)sizeToFit {
