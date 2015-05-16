@@ -15,16 +15,27 @@
 
 @implementation DZNBadge
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        self.labelView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
-        self.labelView.font = [UIFont boldSystemFontOfSize:11.f];
-        self.labelView.textColor = [UIColor whiteColor];
-        [self addSubview:self.labelView];
-        self.backgroundColor = [UIColor clearColor];
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        [self setup];
     }
     
     return self;
+}
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self setup];
+    }
+    
+    return self;
+}
+
+- (void)setup {
+    self.labelView = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.labelView.font = [UIFont boldSystemFontOfSize:11.f];
+    self.labelView.textColor = [UIColor whiteColor];
+    [self addSubview:self.labelView];
+    self.backgroundColor = [UIColor clearColor];
 }
 
 - (void)setBadgeCount:(NSInteger)count {
@@ -54,6 +65,8 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
 
+    self.labelView.frame = self.bounds;
+
     NSDictionary *fontAtts = @{NSFontAttributeName : self.labelView.font};
     CGRect rect = [self.labelView.text boundingRectWithSize:self.frame.size
                                       options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
@@ -69,7 +82,7 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
+    CGContextSetFillColorWithColor(context, self.tintColor.CGColor);
 //    CGContextSetLineWidth(context, 4.0);
 //    CGContextSetStrokeColorWithColor(context,
 //                                     [UIColor blueColor].CGColor);
