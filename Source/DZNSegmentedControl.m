@@ -256,16 +256,15 @@ static const CGFloat kBadgeMargin = 3.f;
 }
 
 - (CGRect)badgeRect {
-    for (NSInteger i = 0 ; i < self.counts.count; i++) {
-        NSNumber *count = self.counts[i];
-        if ([count integerValue] > 0) {
-            
-            UIButton *button = [self buttonAtIndex:i];
-            [self.badge sizeToFit];
-            CGFloat xOffset = button.frame.origin.x + button.frame.size.width - self.badge.frame.size.width - kBadgeMargin;
-            CGFloat yOffset = ((button.frame.size.height - self.badge.frame.size.height) / 2.0) - (2 * kBadgeMargin);
-            return CGRectMake(xOffset, yOffset, self.badge.frame.size.width, self.badge.frame.size.height);
-        }
+    NSNumber *count = self.counts[self.badgeIndex];
+    if ([count integerValue] > 0) {
+        
+        UIButton *button = [self buttonAtIndex:self.badgeIndex];
+        [self.badge sizeToFit];
+        CGFloat xOffset = button.frame.origin.x + button.frame.size.width - self.badge.frame.size.width - kBadgeMargin;
+        CGFloat yOffset = ((button.frame.size.height - self.badge.frame.size.height) / 2.0) - (2 * kBadgeMargin);
+        
+        return CGRectMake(xOffset, yOffset, self.badge.frame.size.width, self.badge.frame.size.height);
     }
     
     return CGRectZero;
@@ -475,7 +474,10 @@ static const CGFloat kBadgeMargin = 3.f;
     
     self.counts[segment] = count;
     
-    self.badge.badgeCount = [count integerValue];
+    if (segment == self.badgeIndex) {
+        self.badge.badgeCount = [count integerValue];
+    }
+
     [self configureSegments];
 }
 

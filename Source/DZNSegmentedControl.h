@@ -54,6 +54,9 @@
 /** YES if the font size should be reduced in order to fit the title string into the segment's width. Default is NO. */
 @property (nonatomic) BOOL adjustsFontSizeToFitWidth;
 
+// es added
+@property (nonatomic) NSUInteger badgeIndex;
+
 /**
  Initializes and returns a segmented control with segments having the given titles or images.
  The returned segmented control is automatically sized to fit its content within the width of its superview.
