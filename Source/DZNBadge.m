@@ -82,7 +82,7 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context, self.tintColor.CGColor);
+    CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
 //    CGContextSetLineWidth(context, 4.0);
 //    CGContextSetStrokeColorWithColor(context,
 //                                     [UIColor blueColor].CGColor);
