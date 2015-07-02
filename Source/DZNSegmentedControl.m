@@ -567,6 +567,10 @@ static const CGFloat kBadgeMargin = 3.f;
         } else {
             [attributedString addAttribute:NSFontAttributeName value:self.font range:NSMakeRange(0, attributedString.string.length)];
             [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(0, attributedString.string.length)];
+
+            if (state == UIControlStateSelected) {
+                self.selectionIndicator.backgroundColor = color;
+            }
         }
         
         [button setAttributedTitle:attributedString forState:state];
