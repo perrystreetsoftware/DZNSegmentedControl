@@ -19,14 +19,14 @@
     if (self = [super initWithCoder:aDecoder]) {
         [self setup];
     }
-    
+
     return self;
 }
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self setup];
     }
-    
+
     return self;
 }
 
@@ -46,12 +46,13 @@
     } else {
         self.labelView.text = @"";
     }
-    [self setNeedsDisplay];
+    [self setNeedsLayout]; // because labelView size changed
+    [self setNeedsDisplay]; // because may need to redraw red circle
 }
 
 - (void)sizeToFit {
     [super sizeToFit];
-    
+
     NSDictionary *fontAtts = @{NSFontAttributeName : self.labelView.font};
     CGRect rect = [self.labelView.text boundingRectWithSize:self.frame.size
                                                     options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
@@ -72,7 +73,7 @@
                                       options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
                                    attributes:fontAtts
                                       context:nil];
-    
+
     CGFloat yOffset = (self.frame.size.height - ceil(rect.size.height)) / 2.0f;
     CGFloat xOffset = (self.frame.size.width - ceil(rect.size.width)) / 2.0f;
     self.labelView.frame = CGRectMake(xOffset, yOffset, ceil(rect.size.width), ceil(rect.size.height));
@@ -89,7 +90,7 @@
     CGContextAddEllipseInRect(context, rect);
     CGContextFillPath(context);
 //    CGContextStrokePath(context);
-    
+
 }
 
 @end
