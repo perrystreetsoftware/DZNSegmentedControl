@@ -262,6 +262,19 @@ static const CGFloat kBadgeMargin = 3.f;
         UIButton *button = [self buttonAtIndex:self.badgeIndex];
         [self.badge sizeToFit];
         CGFloat xOffset = button.frame.origin.x + button.frame.size.width - self.badge.frame.size.width - kBadgeMargin;
+
+        // iPads have more room for badge display, so let's try to be smarter
+        // and align it to the words of the button itself
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            NSAttributedString *title = [button attributedTitleForState:UIControlStateNormal];
+            UIButton *sizingButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [sizingButton setAttributedTitle:title forState:UIControlStateNormal];
+            [sizingButton sizeToFit];
+            CGFloat endOfLabelRelativeX = (button.frame.size.width - sizingButton.frame.size.width) / 2.0 + sizingButton.frame.size.width;
+
+            xOffset = button.frame.origin.x + endOfLabelRelativeX - (self.badge.frame.size.width / 4.0);
+        }
+
         CGFloat yOffset = ((button.frame.size.height - self.badge.frame.size.height) / 2.0) - (2 * kBadgeMargin);
 
         return CGRectMake(xOffset, yOffset, self.badge.frame.size.width, self.badge.frame.size.height);
