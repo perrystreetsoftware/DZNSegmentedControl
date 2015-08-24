@@ -32,31 +32,31 @@ static const CGFloat kBadgeMargin = 3.f;
 - (void)commonInit
 {
     _initializing = YES;
-    
+
     _showsCount = YES;
     _selectedSegmentIndex = -1;
     _font = [UIFont systemFontOfSize:15.0f];
     _selectionIndicatorHeight = 2.0f;
     _animationDuration = 0.2;
     _autoAdjustSelectionIndicatorWidth = YES;
-    
+
     _selectionIndicator = [UIView new];
     _selectionIndicator.backgroundColor = self.tintColor;
     [self addSubview:_selectionIndicator];
-    
+
     _hairline = [UIView new];
     _hairline.backgroundColor = [UIColor lightGrayColor];
     [self addSubview:_hairline];
-    
+
     _colors = [NSMutableDictionary new];
-    
+
     _counts = [NSMutableArray array];
-    
+
     _badge = [DZNBadge new];
     _badge.hidden = YES;
     [self addSubview:_badge];
     [self bringSubviewToFront:_badge];
-    
+
     _initializing = NO;
 }
 
@@ -114,39 +114,39 @@ static const CGFloat kBadgeMargin = 3.f;
 {
     [super layoutSubviews];
     [self sizeToFit];
-    
+
     if ([self buttons].count == 0) {
         _selectedSegmentIndex = -1;
     }
     else if (self.selectedSegmentIndex < 0) {
         _selectedSegmentIndex = 0;
     }
-    
+
     [[self buttons] enumerateObjectsUsingBlock:^(UIButton *button, NSUInteger idx, BOOL *stop) {
-        
+
         CGRect rect = CGRectMake(roundf(self.bounds.size.width/self.numberOfSegments)*idx, 0.0f, roundf(self.bounds.size.width/self.numberOfSegments),
                                  self.bounds.size.height);
         [button setFrame:rect];
-        
+
         CGFloat topInset = (self.barPosition > UIBarPositionBottom) ? -4.0f : 4.0f;
         [button setTitleEdgeInsets:UIEdgeInsetsMake(0.0f, 0.0f, topInset, 0.0f)];
-        
+
         if (idx == self.selectedSegmentIndex) {
             button.selected = YES;
         }
     }];
-    
+
     self.selectionIndicator.frame = [self selectionIndicatorRect];
     _hairline.frame = [self hairlineRect];
     self.badge.frame = [self badgeRect];
-    
+
     [self sendSubviewToBack:self.selectionIndicator];
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
     [super willMoveToSuperview:newSuperview];
-    
+
     [self layoutIfNeeded];
 }
 
@@ -155,9 +155,9 @@ static const CGFloat kBadgeMargin = 3.f;
     if (!self.backgroundColor) {
         self.backgroundColor = [UIColor whiteColor];
     }
-    
+
     [self configureSegments];
-    
+
     [self layoutIfNeeded];
 }
 
@@ -187,7 +187,7 @@ static const CGFloat kBadgeMargin = 3.f;
 - (NSArray *)buttons
 {
     NSMutableArray *buttons = [NSMutableArray arrayWithCapacity:self.items.count];
-    
+
     for (UIView *view in self.subviews) {
         if ([view isKindOfClass:[UIButton class]]) {
             [buttons addObject:view];
@@ -223,7 +223,7 @@ static const CGFloat kBadgeMargin = 3.f;
     if (self.showsCount) {
         NSString *title = [self stringForSegmentAtIndex:segment];
         NSArray *components = [title componentsSeparatedByString:@"\n"];
-        
+
         if (components.count == 2) {
             return components[self.inverseTitles ? 0 : 1];
         }
@@ -241,7 +241,7 @@ static const CGFloat kBadgeMargin = 3.f;
 {
     NSString *key = [NSString stringWithFormat:@"UIControlState%d", (int)state];
     UIColor *color = [self.colors objectForKey:key];
-    
+
     if (!color) {
         switch (state) {
             case UIControlStateNormal:              return [UIColor darkGrayColor];
@@ -251,22 +251,22 @@ static const CGFloat kBadgeMargin = 3.f;
             default:                                return self.tintColor;
         }
     }
-    
+
     return color;
 }
 
 - (CGRect)badgeRect {
     NSNumber *count = self.counts[self.badgeIndex];
     if ([count integerValue] > 0) {
-        
+
         UIButton *button = [self buttonAtIndex:self.badgeIndex];
         [self.badge sizeToFit];
         CGFloat xOffset = button.frame.origin.x + button.frame.size.width - self.badge.frame.size.width - kBadgeMargin;
         CGFloat yOffset = ((button.frame.size.height - self.badge.frame.size.height) / 2.0) - (2 * kBadgeMargin);
-        
+
         return CGRectMake(xOffset, yOffset, self.badge.frame.size.width, self.badge.frame.size.height);
     }
-    
+
     return CGRectZero;
 }
 
@@ -275,29 +275,29 @@ static const CGFloat kBadgeMargin = 3.f;
     CGRect frame = CGRectZero;
     UIButton *button = [self selectedButton];
     NSString *title = [self titleForSegmentAtIndex:button.tag];
-    
+
     if (title.length == 0) {
         return frame;
     }
-    
+
     frame.origin.y = (_barPosition > UIBarPositionBottom) ? 0.0f : (button.frame.size.height-self.selectionIndicatorHeight);
-    
+
     if (self.autoAdjustSelectionIndicatorWidth) {
-        
+
         id attributes = nil;
-        
+
         if (!self.showsCount) {
-            
+
             NSAttributedString *attributedString = [button attributedTitleForState:UIControlStateSelected];
-            
+
             if (attributedString.string.length == 0) {
                 return CGRectZero;
             }
-            
+
             NSRangePointer range = nil;
             attributes = [attributedString attributesAtIndex:0 effectiveRange:range];
         }
-        
+
         frame.size = CGSizeMake([title sizeWithAttributes:attributes].width, self.selectionIndicatorHeight);
         frame.origin.x = (button.frame.size.width*(self.selectedSegmentIndex))+(button.frame.size.width-frame.size.width)/2;
     }
@@ -305,7 +305,7 @@ static const CGFloat kBadgeMargin = 3.f;
         frame.size = CGSizeMake(button.frame.size.width, self.selectionIndicatorHeight);
         frame.origin.x = (button.frame.size.width*(self.selectedSegmentIndex));
     }
-    
+
     return frame;
 }
 
@@ -318,7 +318,7 @@ static const CGFloat kBadgeMargin = 3.f;
 {
     CGRect frame = CGRectMake(0.0f, 0.0f, self.frame.size.width, 0.5f);
     frame.origin.y = (self.barPosition > UIBarPositionBottom) ? 0.0f : self.frame.size.height;
-    
+
     return frame;
 }
 
@@ -327,31 +327,31 @@ static const CGFloat kBadgeMargin = 3.f;
 {
     CGFloat fontSize = 14.0f;
     CGFloat minFontSize = 8.0f;
-    
+
     if (!self.adjustsFontSizeToFitWidth) {
         return fontSize;
     }
-    
+
     CGFloat buttonWidth = roundf(self.bounds.size.width/self.numberOfSegments);
-    
+
     CGSize constraintSize = CGSizeMake(buttonWidth, MAXFLOAT);
-    
+
     do {
         // Creates a new font instance with the current font size
         UIFont *font = [UIFont fontWithName:self.font.fontName size:fontSize];
-        
+
         CGRect textRect = [title boundingRectWithSize:constraintSize options:0 attributes:@{NSFontAttributeName:font} context:nil];
-        
+
         // If the new text rect's width matches the constraint width, return the font size
         if (textRect.size.width <= constraintSize.width) {
             return fontSize;
         }
-        
+
         // Decreases the font size and tries again
         fontSize -= 1.0f;
-        
+
     } while (fontSize > minFontSize);
-    
+
     return fontSize;
 }
 
@@ -367,9 +367,9 @@ static const CGFloat kBadgeMargin = 3.f;
     if (!color || !self.items || self.initializing) {
         return;
     }
-    
+
     [super setTintColor:color];
-    
+
     [self setTitleColor:color forState:UIControlStateHighlighted];
     [self setTitleColor:color forState:UIControlStateSelected];
 }
@@ -383,11 +383,11 @@ static const CGFloat kBadgeMargin = 3.f;
     if (items) {
         _items = [NSArray arrayWithArray:items];
         _counts = [NSMutableArray arrayWithCapacity:items.count];
-        
+
         for (int i = 0; i < items.count; i++) {
             [self.counts addObject:@0];
         }
-        
+
         [self insertAllSegments];
     }
 }
@@ -403,7 +403,7 @@ static const CGFloat kBadgeMargin = 3.f;
     if (segment > self.numberOfSegments-1) {
         segment = 0;
     }
-    
+
     [self setSelected:YES forSegmentAtIndex:segment];
 }
 
@@ -433,12 +433,12 @@ static const CGFloat kBadgeMargin = 3.f;
     if (!title) {
         return;
     }
-    
+
     NSAssert(segment <= self.numberOfSegments, @"Cannot assign a title to non-existing segment.");
     NSAssert(segment >= 0, @"Cannot assign a title to a negative segment.");
-    
+
     NSMutableArray *items = [NSMutableArray arrayWithArray:self.items];
-    
+
     if (segment >= self.numberOfSegments) {
         [items insertObject:title atIndex:self.numberOfSegments];
         [self addButtonForSegment:segment];
@@ -459,7 +459,7 @@ static const CGFloat kBadgeMargin = 3.f;
             [self setCount:[self countForSegmentAtIndex:segment] forSegmentAtIndex:segment];
         }
     }
-    
+
     _items = items;
 }
 
@@ -468,12 +468,12 @@ static const CGFloat kBadgeMargin = 3.f;
     if (!count || !self.items) {
         return;
     }
-    
+
     NSAssert(segment < self.numberOfSegments, @"Cannot assign a count to non-existing segment.");
     NSAssert(segment >= 0, @"Cannot assign a title to a negative segment.");
-    
+
     self.counts[segment] = count;
-    
+
     if (segment == self.badgeIndex) {
         self.badge.badgeCount = [count integerValue];
     }
@@ -485,17 +485,17 @@ static const CGFloat kBadgeMargin = 3.f;
 {
     UIButton *button = [self buttonAtIndex:segment];
     button.titleLabel.numberOfLines = (self.showsCount) ? 2 : 1;
-    
+
     [button setAttributedTitle:attributedString forState:UIControlStateNormal];
     [button setAttributedTitle:attributedString forState:UIControlStateHighlighted];
     [button setAttributedTitle:attributedString forState:UIControlStateSelected];
     [button setAttributedTitle:attributedString forState:UIControlStateDisabled];
-    
+
     [self setTitleColor:[self titleColorForState:UIControlStateNormal] forState:UIControlStateNormal];
     [self setTitleColor:[self titleColorForState:UIControlStateHighlighted] forState:UIControlStateHighlighted];
     [self setTitleColor:[self titleColorForState:UIControlStateDisabled] forState:UIControlStateDisabled];
     [self setTitleColor:[self titleColorForState:UIControlStateSelected] forState:UIControlStateSelected];
-    
+
     self.selectionIndicator.frame = [self selectionIndicatorRect];
 }
 
@@ -504,12 +504,12 @@ static const CGFloat kBadgeMargin = 3.f;
     if (!tintColor) {
         return;
     }
-    
+
     NSAssert(segment < self.numberOfSegments, @"Cannot assign a tint color to non-existing segment.");
     NSAssert(segment >= 0, @"Cannot assign a tint color to a negative segment.");
-    
+
     NSAssert([tintColor isKindOfClass:[UIColor class]], @"Cannot assign a tint color with an unvalid color object.");
-    
+
     UIButton *button = [self buttonAtIndex:segment];
     button.backgroundColor = tintColor;
 }
@@ -517,49 +517,49 @@ static const CGFloat kBadgeMargin = 3.f;
 - (void)setTitleColor:(UIColor *)color forState:(UIControlState)state
 {
     NSAssert([color isKindOfClass:[UIColor class]], @"Cannot assign a title color with an unvalid color object.");
-    
+
     for (UIButton *button in [self buttons]) {
-        
+
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:[button attributedTitleForState:state]];
         NSString *string = attributedString.string;
-        
+
         NSMutableParagraphStyle *style  = [[NSMutableParagraphStyle alloc] init];
         style.alignment = NSTextAlignmentCenter;
         style.lineBreakMode = (self.showsCount) ? NSLineBreakByWordWrapping : NSLineBreakByTruncatingTail;
         style.minimumLineHeight = 20.0f;
-        
+
         [attributedString addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, string.length)];
-        
+
         if (self.showsCount) {
-            
+
             NSArray *components = [attributedString.string componentsSeparatedByString:@"\n"];
-            
+
             if (components.count < 2) {
                 return;
             }
 
             NSString *count = [components objectAtIndex:self.inverseTitles ? 1 : 0];
             NSString *title = [components objectAtIndex:self.inverseTitles ? 0 : 1];
-            
+
             CGFloat fontSizeForTitle = [self appropriateFontSizeForTitle:title];
-            
+
             [attributedString addAttribute:NSFontAttributeName value:[UIFont fontWithName:self.font.fontName size:19.0f] range:[string rangeOfString:count]];
             [attributedString addAttribute:NSFontAttributeName value:[UIFont fontWithName:self.font.fontName size:fontSizeForTitle] range:[string rangeOfString:title]];
-            
+
             if (state == UIControlStateNormal) {
-                
+
                 UIColor *topColor = self.inverseTitles ? [color colorWithAlphaComponent:0.5f] : color;
                 UIColor *bottomColor = self.inverseTitles ? color : [color colorWithAlphaComponent:0.5f];
 
                 NSUInteger topLength = self.inverseTitles ? title.length : count.length;
                 NSUInteger bottomLength = self.inverseTitles ? count.length : title.length;
-                
+
                 [attributedString addAttribute:NSForegroundColorAttributeName value:topColor range:NSMakeRange(0, topLength)];
                 [attributedString addAttribute:NSForegroundColorAttributeName value:bottomColor range:NSMakeRange(topLength, bottomLength+1)];
             }
             else {
                 [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(0, string.length)];
-                
+
                 if (state == UIControlStateSelected) {
                     self.selectionIndicator.backgroundColor = color;
                 }
@@ -572,10 +572,10 @@ static const CGFloat kBadgeMargin = 3.f;
                 self.selectionIndicator.backgroundColor = color;
             }
         }
-        
+
         [button setAttributedTitle:attributedString forState:state];
     }
-    
+
     NSString *key = [NSString stringWithFormat:@"UIControlState%d", (int)state];
     [self.colors setObject:color forKey:key];
 }
@@ -585,17 +585,17 @@ static const CGFloat kBadgeMargin = 3.f;
     if (self.selectedSegmentIndex == segment || self.isTransitioning) {
         return;
     }
-    
+
     [self disableAllButtonsSelection];
     [self enableAllButtonsInteraction:NO];
-    
+
     CGFloat duration = (self.selectedSegmentIndex < 0.0f) ? 0.0f : self.animationDuration;
-    
+
     _selectedSegmentIndex = segment;
     _transitioning = YES;
-    
+
     UIButton *button = [self buttonAtIndex:segment];
-    
+
     CGFloat damping = !self.bouncySelectionIndicator ? : 0.65f;
     CGFloat velocity = !self.bouncySelectionIndicator ? : 0.5f;
 
@@ -612,7 +612,7 @@ static const CGFloat kBadgeMargin = 3.f;
                          button.userInteractionEnabled = NO;
                          _transitioning = NO;
                      }];
-    
+
     [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
@@ -621,13 +621,13 @@ static const CGFloat kBadgeMargin = 3.f;
     if (self.showsCount == count) {
         return;
     }
-    
+
     _showsCount = count;
-    
+
     for (int i = 0; i < [self buttons].count; i++) {
         [self configureButtonForSegment:i];
     }
-    
+
     self.selectionIndicator.frame = [self selectionIndicatorRect];
 }
 
@@ -636,13 +636,13 @@ static const CGFloat kBadgeMargin = 3.f;
     if ([self.font.fontName isEqualToString:font.fontName]) {
         return;
     }
-    
+
     _font = font;
-    
+
     for (int i = 0; i < [self buttons].count; i++) {
         [self configureButtonForSegment:i];
     }
-    
+
     self.selectionIndicator.frame = [self selectionIndicatorRect];
 }
 
@@ -651,13 +651,13 @@ static const CGFloat kBadgeMargin = 3.f;
     if (self.showsGroupingSeparators == showsGroupingSeparators) {
         return;
     }
-    
+
     _showsGroupingSeparators = showsGroupingSeparators;
-    
+
     for (int i = 0; i < [self buttons].count; i++) {
         [self configureButtonForSegment:i];
     }
-    
+
     self.selectionIndicator.frame = [self selectionIndicatorRect];
 }
 
@@ -666,13 +666,13 @@ static const CGFloat kBadgeMargin = 3.f;
     if ([self.numberFormatter isEqual:numberFormatter]) {
         return;
     }
-    
+
     _numberFormatter = numberFormatter;
-    
+
     for (int i = 0; i < [self buttons].count; i++) {
         [self configureButtonForSegment:i];
     }
-    
+
     self.selectionIndicator.frame = [self selectionIndicatorRect];
 }
 
@@ -687,7 +687,7 @@ static const CGFloat kBadgeMargin = 3.f;
     if (self.initializing) {
         return;
     }
-    
+
     self.hairline.backgroundColor = color;
 }
 
@@ -704,10 +704,10 @@ static const CGFloat kBadgeMargin = 3.f;
 - (void)addButtonForSegment:(NSUInteger)segment
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    
+
     [button addTarget:self action:@selector(willSelectedButton:) forControlEvents:UIControlEventTouchDown];
     [button addTarget:self action:@selector(didSelectButton:) forControlEvents:UIControlEventTouchDragOutside|UIControlEventTouchDragInside|UIControlEventTouchDragEnter|UIControlEventTouchDragExit|UIControlEventTouchCancel|UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
-    
+
     button.backgroundColor = nil;
     button.opaque = YES;
     button.clipsToBounds = YES;
@@ -725,7 +725,7 @@ static const CGFloat kBadgeMargin = 3.f;
     for (UIButton *button in [self buttons]) {
         [self configureButtonForSegment:button.tag];
     }
-    
+
     self.selectionIndicator.frame = [self selectionIndicatorRect];
     self.selectionIndicator.backgroundColor = self.tintColor;
     self.badge.frame = [self badgeRect];
@@ -735,15 +735,15 @@ static const CGFloat kBadgeMargin = 3.f;
 {
     NSAssert(segment < self.numberOfSegments, @"Cannot configure a button for a non-existing segment.");
     NSAssert(segment >= 0, @"Cannot configure a button for a negative segment.");
-    
+
     NSMutableString *title = [NSMutableString stringWithFormat:@"%@", self.items[segment]];
-    
+
     if (self.showsCount) {
         NSNumber *count = [self countForSegmentAtIndex:segment];
-        
+
         NSString *breakString = @"\n";
         NSString *countString;
-        
+
         if (self.numberFormatter) {
             countString = [self.numberFormatter stringFromNumber:count];
         }
@@ -753,12 +753,12 @@ static const CGFloat kBadgeMargin = 3.f;
         else {
             countString = [NSString stringWithFormat:@"%@", count];
         }
-        
+
         NSString *resultString = self.inverseTitles ? [breakString stringByAppendingString:countString] : [countString stringByAppendingString:breakString];
-        
+
         [title insertString:resultString atIndex:self.inverseTitles ? title.length : 0];
     }
-    
+
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:title];
     [self setAttributedTitle:attributedString forSegmentAtIndex:segment];
 }
@@ -766,7 +766,7 @@ static const CGFloat kBadgeMargin = 3.f;
 - (void)willSelectedButton:(id)sender
 {
     UIButton *button = (UIButton *)sender;
-    
+
     if (!self.isTransitioning) {
         self.selectedSegmentIndex = button.tag;
     }
@@ -775,7 +775,7 @@ static const CGFloat kBadgeMargin = 3.f;
 - (void)didSelectButton:(id)sender
 {
     UIButton *button = (UIButton *)sender;
-    
+
     button.highlighted = NO;
     button.selected = YES;
 }
@@ -800,10 +800,10 @@ static const CGFloat kBadgeMargin = 3.f;
     if (self.isTransitioning) {
         return;
     }
-    
+
     // Removes all the buttons
     [[self buttons] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
+
     _items = nil;
     _counts = nil;
 }
