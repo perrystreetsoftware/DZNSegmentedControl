@@ -727,6 +727,8 @@ static const CGFloat kBadgeMargin = 3.f;
     button.adjustsImageWhenHighlighted = NO;
     button.adjustsImageWhenDisabled = NO;
     button.exclusiveTouch = YES;
+    button.titleLabel.adjustsFontSizeToFitWidth = YES;
+    button.titleLabel.minimumScaleFactor = 0.5;
     button.tag = segment;
 
     [self addSubview:button];
