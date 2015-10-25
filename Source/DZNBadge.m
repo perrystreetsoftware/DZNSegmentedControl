@@ -39,8 +39,8 @@
 }
 
 - (void)setBadgeCount:(NSInteger)count {
-    if (count > 9) {
-        self.labelView.text = @"9+";
+    if (count > 99) {
+        self.labelView.text = @"++";
     } else if (count > 0) {
         self.labelView.text = [NSString stringWithFormat:@"%ld", (long)count];
     } else {
