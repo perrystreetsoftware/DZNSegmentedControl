@@ -21,6 +21,7 @@ static const CGFloat kBadgeMargin = 3.f;
 @property (nonatomic, strong) NSMutableArray *counts; // of NSNumber
 @property (nonatomic, getter = isTransitioning) BOOL transitioning;
 @property (nonatomic, strong) DZNBadge *badge;
+@property (nonatomic) BOOL wasNewSelection;
 
 @end
 
@@ -58,6 +59,7 @@ static const CGFloat kBadgeMargin = 3.f;
     [self bringSubviewToFront:_badge];
 
     _initializing = NO;
+    _wasNewSelection = NO;
 }
 
 - (id)init
@@ -718,6 +720,7 @@ static const CGFloat kBadgeMargin = 3.f;
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
 
+    [button addTarget:self action:@selector(buttonTouchedUpInside:) forControlEvents:UIControlEventTouchUpInside];
     [button addTarget:self action:@selector(willSelectedButton:) forControlEvents:UIControlEventTouchDown];
     [button addTarget:self action:@selector(didSelectButton:) forControlEvents:UIControlEventTouchDragOutside|UIControlEventTouchDragInside|UIControlEventTouchDragEnter|UIControlEventTouchDragExit|UIControlEventTouchCancel|UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
 
@@ -781,6 +784,8 @@ static const CGFloat kBadgeMargin = 3.f;
 - (void)willSelectedButton:(id)sender
 {
     UIButton *button = (UIButton *)sender;
+    
+    self.wasNewSelection = button.tag != self.selectedSegmentIndex;
 
     if (!self.isTransitioning) {
         self.selectedSegmentIndex = button.tag;
@@ -793,6 +798,10 @@ static const CGFloat kBadgeMargin = 3.f;
 
     button.highlighted = NO;
     button.selected = YES;
+}
+
+- (void)buttonTouchedUpInside:(UIButton *)sender {
+    [self.segmentDelegate segmentedControl:self didHaveSegmentTouchedUpInside:sender.tag wasNewSelection:self.wasNewSelection];
 }
 
 - (void)disableAllButtonsSelection
