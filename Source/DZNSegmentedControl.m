@@ -602,14 +602,11 @@ static const CGFloat kBadgeMargin = 3.f;
     }
 
     [self disableAllButtonsSelection];
-    [self enableAllButtonsInteraction:NO];
 
     CGFloat duration = (self.selectedSegmentIndex < 0.0f) ? 0.0f : self.animationDuration;
 
     _selectedSegmentIndex = segment;
     _transitioning = YES;
-
-    UIButton *button = [self buttonAtIndex:segment];
 
     CGFloat damping = !self.bouncySelectionIndicator ? : 0.65f;
     CGFloat velocity = !self.bouncySelectionIndicator ? : 0.5f;
@@ -623,8 +620,6 @@ static const CGFloat kBadgeMargin = 3.f;
                          self.selectionIndicator.frame = [self selectionIndicatorRect];
                      }
                      completion:^(BOOL finished) {
-                         [self enableAllButtonsInteraction:YES];
-                         button.userInteractionEnabled = NO;
                          _transitioning = NO;
                      }];
 
@@ -809,13 +804,6 @@ static const CGFloat kBadgeMargin = 3.f;
     for (UIButton *button in [self buttons]) {
         button.highlighted = NO;
         button.selected = NO;
-    }
-}
-
-- (void)enableAllButtonsInteraction:(BOOL)enable
-{
-    for (UIButton *button in [self buttons]) {
-        button.userInteractionEnabled = enable;
     }
 }
 
