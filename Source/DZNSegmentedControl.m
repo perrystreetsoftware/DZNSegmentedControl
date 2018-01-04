@@ -779,10 +779,9 @@ static const CGFloat kBadgeMargin = 3.f;
 - (void)willSelectedButton:(id)sender
 {
     UIButton *button = (UIButton *)sender;
-    
-    self.wasNewSelection = button.tag != self.selectedSegmentIndex;
 
     if (!self.isTransitioning) {
+        self.wasNewSelection = button.tag != self.selectedSegmentIndex;
         self.selectedSegmentIndex = button.tag;
     }
 }
