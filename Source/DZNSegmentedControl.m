@@ -410,7 +410,9 @@ static const CGFloat kBadgeMargin = 3.f;
 - (void)setDelegate:(id<DZNSegmentedControlDelegate>)delegate
 {
     _delegate = delegate;
-    _barPosition = [delegate positionForBar:self];
+    if ([delegate respondsToSelector:@selector(positionForBar:)]) {
+        _barPosition = [delegate positionForBar:self];
+    }
 }
 
 - (void)setSelectedSegmentIndex:(NSInteger)segment
@@ -795,7 +797,9 @@ static const CGFloat kBadgeMargin = 3.f;
 }
 
 - (void)buttonTouchedUpInside:(UIButton *)sender {
-    [self.segmentDelegate segmentedControl:self didHaveSegmentTouchedUpInside:sender.tag wasNewSelection:self.wasNewSelection];
+    if ([self.delegate respondsToSelector:@selector(segmentedControl:didHaveSegmentTouchedUpInside:wasNewSelection:)]) {
+        [self.delegate segmentedControl:self didHaveSegmentTouchedUpInside:sender.tag wasNewSelection:self.wasNewSelection];
+    }
 }
 
 - (void)disableAllButtonsSelection
