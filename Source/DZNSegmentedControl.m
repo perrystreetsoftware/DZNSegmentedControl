@@ -21,6 +21,7 @@ static const CGFloat kBadgeMargin = 3.f;
 @property (nonatomic, strong) NSMutableArray *counts; // of NSNumber
 @property (nonatomic, getter = isTransitioning) BOOL transitioning;
 @property (nonatomic, strong) DZNBadge *badge;
+@property (nonatomic) BOOL wasNewSelection;
 
 @end
 
@@ -58,6 +59,7 @@ static const CGFloat kBadgeMargin = 3.f;
     [self bringSubviewToFront:_badge];
 
     _initializing = NO;
+    _wasNewSelection = NO;
 }
 
 - (id)init
@@ -408,7 +410,9 @@ static const CGFloat kBadgeMargin = 3.f;
 - (void)setDelegate:(id<DZNSegmentedControlDelegate>)delegate
 {
     _delegate = delegate;
-    _barPosition = [delegate positionForBar:self];
+    if ([delegate respondsToSelector:@selector(positionForBar:)]) {
+        _barPosition = [delegate positionForBar:self];
+    }
 }
 
 - (void)setSelectedSegmentIndex:(NSInteger)segment
@@ -600,14 +604,11 @@ static const CGFloat kBadgeMargin = 3.f;
     }
 
     [self disableAllButtonsSelection];
-    [self enableAllButtonsInteraction:NO];
 
     CGFloat duration = (self.selectedSegmentIndex < 0.0f) ? 0.0f : self.animationDuration;
 
     _selectedSegmentIndex = segment;
     _transitioning = YES;
-
-    UIButton *button = [self buttonAtIndex:segment];
 
     CGFloat damping = !self.bouncySelectionIndicator ? : 0.65f;
     CGFloat velocity = !self.bouncySelectionIndicator ? : 0.5f;
@@ -621,8 +622,6 @@ static const CGFloat kBadgeMargin = 3.f;
                          self.selectionIndicator.frame = [self selectionIndicatorRect];
                      }
                      completion:^(BOOL finished) {
-                         [self enableAllButtonsInteraction:YES];
-                         button.userInteractionEnabled = NO;
                          _transitioning = NO;
                      }];
 
@@ -718,6 +717,7 @@ static const CGFloat kBadgeMargin = 3.f;
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
 
+    [button addTarget:self action:@selector(buttonTouchedUpInside:) forControlEvents:UIControlEventTouchUpInside];
     [button addTarget:self action:@selector(willSelectedButton:) forControlEvents:UIControlEventTouchDown];
     [button addTarget:self action:@selector(didSelectButton:) forControlEvents:UIControlEventTouchDragOutside|UIControlEventTouchDragInside|UIControlEventTouchDragEnter|UIControlEventTouchDragExit|UIControlEventTouchCancel|UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
 
@@ -783,6 +783,7 @@ static const CGFloat kBadgeMargin = 3.f;
     UIButton *button = (UIButton *)sender;
 
     if (!self.isTransitioning) {
+        self.wasNewSelection = button.tag != self.selectedSegmentIndex;
         self.selectedSegmentIndex = button.tag;
     }
 }
@@ -795,18 +796,17 @@ static const CGFloat kBadgeMargin = 3.f;
     button.selected = YES;
 }
 
+- (void)buttonTouchedUpInside:(UIButton *)sender {
+    if ([self.delegate respondsToSelector:@selector(segmentedControl:didHaveSegmentTouchedUpInside:wasNewSelection:)]) {
+        [self.delegate segmentedControl:self didHaveSegmentTouchedUpInside:sender.tag wasNewSelection:self.wasNewSelection];
+    }
+}
+
 - (void)disableAllButtonsSelection
 {
     for (UIButton *button in [self buttons]) {
         button.highlighted = NO;
         button.selected = NO;
-    }
-}
-
-- (void)enableAllButtonsInteraction:(BOOL)enable
-{
-    for (UIButton *button in [self buttons]) {
-        button.userInteractionEnabled = enable;
     }
 }
 
