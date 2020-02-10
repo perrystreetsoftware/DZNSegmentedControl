@@ -267,7 +267,9 @@ static const CGFloat kBadgeMargin = 3.f;
 
         // iPads have more room for badge display, so let's try to be smarter
         // and align it to the words of the button itself
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        // If the title label is less that 50% of the size of the button, lets
+        // have the badge hug the title label
+        if (button.titleLabel.frame.size.width > 0 && ((button.titleLabel.frame.size.width / button.frame.size.width) <= 0.5)) {
             NSAttributedString *title = [button attributedTitleForState:UIControlStateNormal];
             UIButton *sizingButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [sizingButton setAttributedTitle:title forState:UIControlStateNormal];
