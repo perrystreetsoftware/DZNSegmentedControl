@@ -60,6 +60,8 @@ static const CGFloat kBadgeMargin = 3.f;
 
     _initializing = NO;
     _wasNewSelection = NO;
+
+    _badgeIndex = DZN_BADGE_INDEX_UNSET;
 }
 
 - (id)init
@@ -258,8 +260,8 @@ static const CGFloat kBadgeMargin = 3.f;
 }
 
 - (CGRect)badgeRect {
-    NSNumber *count = self.counts[self.badgeIndex];
-    if ([count integerValue] > 0) {
+    if (self.badgeIndex >= 0) {
+        NSNumber *count = self.counts[self.badgeIndex];
 
         UIButton *button = [self buttonAtIndex:self.badgeIndex];
         [self.badge sizeToFit];

@@ -44,7 +44,8 @@
     } else if (count > 0) {
         self.labelView.text = [NSString stringWithFormat:@"%ld", (long)count];
     } else {
-        self.labelView.text = @"";
+        // A badge count of 0 will result in an empty badge
+        self.labelView.text = @" ";
     }
     [self setNeedsLayout]; // because labelView size changed
     [self setNeedsDisplay]; // because may need to redraw red circle

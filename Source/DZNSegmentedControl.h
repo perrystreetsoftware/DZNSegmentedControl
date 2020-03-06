@@ -10,6 +10,8 @@
 
 #import <UIKit/UIKit.h>
 
+#define DZN_BADGE_INDEX_UNSET -1
+
 @protocol DZNSegmentedControlDelegate;
 
 /**
@@ -55,7 +57,7 @@
 @property (nonatomic) BOOL adjustsFontSizeToFitWidth;
 
 // es added
-@property (nonatomic) NSUInteger badgeIndex;
+@property (nonatomic) NSInteger badgeIndex;
 
 /**
  Initializes and returns a segmented control with segments having the given titles or images.
