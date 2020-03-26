@@ -36,6 +36,7 @@
     self.labelView.textColor = [UIColor whiteColor];
     [self addSubview:self.labelView];
     self.backgroundColor = [UIColor clearColor];
+    self.badgeColor = [UIColor redColor];
 }
 
 - (void)setBadgeCount:(NSInteger)count {
@@ -49,6 +50,12 @@
     }
     [self setNeedsLayout]; // because labelView size changed
     [self setNeedsDisplay]; // because may need to redraw red circle
+}
+
+- (void)setBadgeColor:(UIColor *)badgeColor {
+    _badgeColor = badgeColor;
+
+    [self setNeedsDisplay];
 }
 
 - (void)sizeToFit {
@@ -84,7 +91,7 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
+    CGContextSetFillColorWithColor(context, self.badgeColor.CGColor);
 //    CGContextSetLineWidth(context, 4.0);
 //    CGContextSetStrokeColorWithColor(context,
 //                                     [UIColor blueColor].CGColor);

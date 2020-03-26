@@ -10,5 +10,6 @@
 
 @interface DZNBadge : UIView
 @property (nonatomic, assign) NSInteger badgeCount;
+@property (nonatomic, strong) UIColor *badgeColor;
 
 @end
