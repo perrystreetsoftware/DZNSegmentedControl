@@ -58,6 +58,7 @@
 
 // es added
 @property (nonatomic) NSInteger badgeIndex;
+@property (nonatomic, strong) UIColor *badgeColor;
 
 /**
  Initializes and returns a segmented control with segments having the given titles or images.

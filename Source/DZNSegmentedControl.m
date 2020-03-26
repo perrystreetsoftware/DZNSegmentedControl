@@ -374,6 +374,10 @@ static const CGFloat kBadgeMargin = 3.f;
     return fontSize;
 }
 
+- (UIColor *)badgeColor {
+    return self.badge.badgeColor;
+}
+
 
 #pragma mark - Setter Methods
 
@@ -705,6 +709,10 @@ static const CGFloat kBadgeMargin = 3.f;
     }
 
     self.hairline.backgroundColor = color;
+}
+
+- (void)setBadgeColor:(UIColor *)badgeColor {
+    self.badge.badgeColor = badgeColor;
 }
 
 
